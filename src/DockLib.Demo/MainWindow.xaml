@@ -1,0 +1,58 @@
+<Window
+	x:Class="DockLib.Demo.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:dock="//DockLib/2015/05/"
+	xmlns:local="clr-namespace:DockLib.Demo"
+	Title="Dock Lib"
+	Height="350"
+	Width="525"
+	>
+	<dock:ToolHost Name="Host">
+		<dock:ToolSplitPanel Orientation="Horizontal">
+			<dock:ToolSplitPanel
+				Orientation="Vertical"
+				dock:ToolSplitPanel.SplitFactor="2"
+				>
+				<dock:ToolPanel
+					Header="Bob1"
+					>
+					<local:BigRedX />
+				</dock:ToolPanel>
+				<dock:ToolPanel
+					Header="Bob2"
+					>
+					<local:BigRedX />
+				</dock:ToolPanel>
+				<dock:ToolPanel
+					Header="Bob3"
+					>
+					<local:BigRedX />
+				</dock:ToolPanel>
+			</dock:ToolSplitPanel>
+			<dock:ToolPanel
+				Header="Document"
+				dock:ToolSplitPanel.SplitFactor="5"
+				>
+				<local:BigRedX />
+			</dock:ToolPanel>
+			<dock:ToolSplitPanel
+				Orientation="Vertical"
+				dock:ToolSplitPanel.SplitFactor="2"
+				>
+				<dock:ToolPanel
+					Header="Explorer"
+					dock:ToolSplitPanel.SplitFactor="3"
+					>
+					<local:BigRedX />
+				</dock:ToolPanel>
+				<dock:ToolPanel
+					Header="Properties"
+					dock:ToolSplitPanel.SplitFactor="2"
+					>
+					<local:BigRedX />
+				</dock:ToolPanel>
+			</dock:ToolSplitPanel>
+		</dock:ToolSplitPanel>
+	</dock:ToolHost>
+</Window>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockLib", "DockLib\DockLib.csproj", "{C3260CFA-8C50-4FC5-9CAA-CD2FB4E373D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockLib.Demo", "DockLib.Demo\DockLib.Demo.csproj", "{C1367339-8FBD-414D-B019-FF5E4547B323}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3260CFA-8C50-4FC5-9CAA-CD2FB4E373D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3260CFA-8C50-4FC5-9CAA-CD2FB4E373D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3260CFA-8C50-4FC5-9CAA-CD2FB4E373D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3260CFA-8C50-4FC5-9CAA-CD2FB4E373D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1367339-8FBD-414D-B019-FF5E4547B323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1367339-8FBD-414D-B019-FF5E4547B323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1367339-8FBD-414D-B019-FF5E4547B323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,88 @@
+// Copyright (c) Brian Reichle.  All Rights Reserved.  Licensed under the MIT License.  See License.txt in the project root for license information.
+<#@template language="C#" hostspecific="true" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ output extension=".g.cs" #>
+<#
+var resources = Load(this.Host.ResolvePath(@"..\Themes\Generic.xaml")).ToArray();
+#>
+using System.Windows;
+
+namespace DockLib
+{
+	internal enum DockResourceKeyID
+	{
+<#
+foreach (var resource in resources)
+{
+#>
+		<#=resource.PropertyName#>,
+<#
+}
+#>
+	}
+
+	public static partial class DockResources
+	{
+<#
+foreach (var resource in resources)
+{
+#>
+		public static ResourceKey <#=resource.PropertyName#> { get; } = new DockResourceKey(DockResourceKeyID.<#=resource.PropertyName#>);
+<#
+}
+#>
+	}
+}
+<#+
+class ResourceNode
+{
+	public ResourceNode(string name)
+	{
+		PropertyName = name;
+		FieldName = "_" + name;
+	}
+
+	public string PropertyName { get; private set; }
+	public string FieldName { get; private set; }
+}
+
+static IEnumerable<ResourceNode> Load(string path)
+{
+	return Load(XElement.Load(path));
+}
+
+static IEnumerable<ResourceNode> Load(XElement element)
+{
+	foreach(var child in element.Elements())
+	{
+		var keyAtt = child.Attribute(xamlNamespace + "Key");
+		if (keyAtt == null) continue;
+
+		var match = keyRegex.Match(keyAtt.Value);
+		if (!match.Success) continue;
+
+		var prefixGroup = match.Groups["prefix"];
+		var ns = prefixGroup.Success ? child.GetNamespaceOfPrefix(prefixGroup.Value) : child.GetDefaultNamespace();
+		if (ns != "clr-namespace:DockLib") continue;
+
+		yield return new ResourceNode(match.Groups["name"].Value);
+	}
+}
+
+static string CammelCase(string source)
+{
+	var builder = new StringBuilder(source);
+
+	return builder.ToString();
+}
+
+static readonly XNamespace xamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
+static readonly Regex keyRegex = new Regex(@"\{x:Static ((?<prefix>[a-z]+):)?DockResources.(?<name>[a-z]+)\}", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+#>

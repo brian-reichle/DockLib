@@ -1,0 +1,330 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:DockLib"
+	xmlns:primatives="clr-namespace:DockLib.Primitives"
+	>
+	<Path
+		x:Key="ClosePanelButtonContent"
+		x:Shared="False"
+		Fill="{x:Null}"
+		Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+		StrokeThickness="2"
+		Data="M0,0 L7,7 M0,7 L7,0"
+		Margin="1"
+		/>
+
+	<Path
+		x:Key="UpArrow"
+		x:Shared="False"
+		Data="M0,0 L24,0 L24,24 L16,24 L16,16 L20,16 L12,8 L4,16 L8,16 L8,24 L0,24 Z"
+		StrokeThickness="1"
+		Stroke="Blue"
+		Fill="LightBlue"
+		Opacity="0.75"
+		SnapsToDevicePixels="True"
+		UseLayoutRounding="True"
+		/>
+
+	<LinearGradientBrush x:Key="ActiveCaptionGradientBrush" StartPoint="0,0" EndPoint="1,0">
+		<GradientStop Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}" Offset="0" />
+		<GradientStop Color="{DynamicResource {x:Static SystemColors.GradientActiveCaptionColorKey}}" Offset="1" />
+	</LinearGradientBrush>
+
+	<LinearGradientBrush x:Key="InactiveCaptionGradientBrush" StartPoint="0,0" EndPoint="1,0">
+		<GradientStop Color="{DynamicResource {x:Static SystemColors.InactiveCaptionColorKey}}" Offset="0" />
+		<GradientStop Color="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionColorKey}}" Offset="1" />
+	</LinearGradientBrush>
+
+	<Style TargetType="{x:Type Button}" x:Key="{x:Static local:DockResources.ClosePanelButtonStyleKey}">
+		<Setter Property="Command" Value="{x:Static primatives:ToolHeader.Close}" />
+		<Setter Property="Height" Value="15" />
+		<Setter Property="Width" Value="15" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Margin" Value="1" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="IsTabStop" Value="False" />
+		<Setter Property="Content" Value="{StaticResource ClosePanelButtonContent}" />
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolSplitterAdorner}">
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+		<Setter Property="Opacity" Value="0.4" />
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolDropCloth}">
+		<Setter Property="AllowsTransparency" Value="True" />
+		<Setter Property="WindowStyle" Value="None" />
+		<Setter Property="Focusable" Value="False" />
+		<Setter Property="ShowInTaskbar" Value="False" />
+		<Setter Property="ShowActivated" Value="False" />
+		<Setter Property="Background" Value="{x:Null}" />
+		<Setter Property="BorderBrush" Value="{x:Null}" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type primatives:ToolDropCloth}">
+					<primatives:ToolDropOverlay x:Name="PART_Overlay" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolHeader}">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.CaptionHeightKey}}" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="HorizontalContentAlignment" Value="Left" />
+		<Setter Property="Padding" Value="1" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type primatives:ToolHeader}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+
+							<ContentPresenter
+								Grid.ColumnSpan="2"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								Margin="{TemplateBinding Padding}"
+								/>
+
+							<Button
+								Grid.Column="2"
+								Style="{DynamicResource {x:Static local:DockResources.ClosePanelButtonStyleKey}}"
+								/>
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolDropTargetPoint}">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="BorderBrush" Value="{x:Null}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type primatives:ToolDropTargetPoint}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						SnapsToDevicePixels="True"
+						UseLayoutRounding="True"
+						Child="{StaticResource UpArrow}"
+						/>
+					<ControlTemplate.Triggers>
+						<Trigger Property="TargetType" Value="OuterLeft">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="90" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="TargetType" Value="OuterTop">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="180" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="TargetType" Value="OuterRight">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="270" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="TargetType" Value="InnerLeft">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="90" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="TargetType" Value="InnerTop">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="180" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="TargetType" Value="InnerRight">
+							<Setter Property="LayoutTransform">
+								<Setter.Value>
+									<RotateTransform Angle="270" CenterX="12" CenterY="12" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolDropPreview}">
+		<Setter Property="Background" Value="LightBlue" />
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="BorderBrush" Value="Blue" />
+		<Setter Property="Opacity" Value="0.4" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type primatives:ToolDropPreview}" >
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						SnapsToDevicePixels="True"
+						/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolDropOverlay}">
+		<Setter Property="Padding" Value="3" />
+	</Style>
+
+	<Style TargetType="{x:Type primatives:ToolSplitter}">
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type primatives:ToolSplitter}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						SnapsToDevicePixels="True"
+						/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="Orientation" Value="Horizontal">
+				<Setter Property="Cursor" Value="SizeWE" />
+			</Trigger>
+			<Trigger Property="Orientation" Value="Vertical">
+				<Setter Property="Cursor" Value="SizeNS" />
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+	<Style TargetType="{x:Type local:ToolPanel}">
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ToolPanel}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						SnapsToDevicePixels="True"
+						>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+
+							<primatives:ToolHeader
+								x:Name="PART_Header"
+								Grid.Row="0"
+								Content="{TemplateBinding Header}"
+								/>
+
+							<ContentPresenter
+								Grid.Row="1"
+								Margin="{TemplateBinding Padding}"
+								SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+								/>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsKeyboardFocusWithin" Value="True">
+							<Setter TargetName="PART_Header" Property="Background" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" />
+							<Setter TargetName="PART_Header" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type local:ToolDragWindow}" BasedOn="{StaticResource {x:Type Window}}">
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+		<Setter Property="ShowInTaskbar" Value="False" />
+		<Setter Property="WindowStyle" Value="None" />
+		<Setter Property="ShowActivated" Value="False" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ToolDragWindow}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						>
+						<AdornerDecorator>
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+									<RowDefinition />
+								</Grid.RowDefinitions>
+
+								<primatives:ToolHeader
+									x:Name="PART_Header"
+									Visibility="Collapsed"
+									Background="{StaticResource InactiveCaptionGradientBrush}"
+									Foreground="{DynamicResource {x:Static SystemColors.InactiveCaptionTextBrushKey}}"
+									/>
+
+								<ContentPresenter
+									Grid.Row="1"
+									/>
+							</Grid>
+						</AdornerDecorator>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasSinglePanel" Value="False">
+							<Setter TargetName="PART_Header" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="IsActive" Value="True">
+							<Setter TargetName="PART_Header" Property="Background" Value="{StaticResource ActiveCaptionGradientBrush}" />
+							<Setter TargetName="PART_Header" Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type local:ToolHost}">
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:ToolHost}">
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						SnapsToDevicePixels="True"
+						>
+						<ContentPresenter />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>
