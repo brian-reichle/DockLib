@@ -8,25 +8,25 @@ namespace DockLib.Primitives
 	public sealed class ToolSplitterAdorner : Adorner
 	{
 		public static readonly DependencyProperty RectangleProperty = DependencyProperty.Register(
-			"Rectangle",
+			nameof(Rectangle),
 			typeof(Rect),
 			typeof(ToolSplitterAdorner),
 			new FrameworkPropertyMetadata(default(Rect), FrameworkPropertyMetadataOptions.AffectsRender));
 
 		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
-			"Background",
+			nameof(Background),
 			typeof(Brush),
 			typeof(ToolSplitterAdorner),
 			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
 		public static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(
-			"BorderBrush",
+			nameof(BorderBrush),
 			typeof(Brush),
 			typeof(ToolSplitterAdorner),
 			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
 		public static readonly DependencyProperty BorderThicknessProperty = DependencyProperty.Register(
-			"BorderThickness",
+			nameof(BorderThickness),
 			typeof(double),
 			typeof(ToolSplitterAdorner),
 			new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.AffectsRender));

@@ -97,10 +97,7 @@ namespace DockLib
 			}
 		}
 
-		protected override int VisualChildrenCount
-		{
-			get { return base.VisualChildrenCount + _splitters.Count; }
-		}
+		protected override int VisualChildrenCount => base.VisualChildrenCount + _splitters.Count;
 
 		protected override Visual GetVisualChild(int index)
 		{

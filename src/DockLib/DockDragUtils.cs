@@ -218,7 +218,7 @@ namespace DockLib
 		{
 			var root = (FrameworkElement)sender;
 
-			if (true.Equals(args.NewValue))
+			if ((bool)args.NewValue)
 			{
 				SetDropCloth(root, new ToolDropCloth(root));
 			}

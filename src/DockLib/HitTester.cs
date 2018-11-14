@@ -20,28 +20,21 @@ namespace DockLib
 
 		HitTestFilterBehavior HitTestFilter(DependencyObject potentialHitTestTarget)
 		{
-			var root = potentialHitTestTarget as IDockRoot;
-
-			if (root != null)
+			switch (potentialHitTestTarget)
 			{
-				Root = root;
-				return HitTestFilterBehavior.ContinueSkipSelf;
+				case IDockRoot root:
+					Root = root;
+					return HitTestFilterBehavior.ContinueSkipSelf;
+
+				case ToolPanel panel:
+					Panel = panel;
+					return HitTestFilterBehavior.Stop;
+
+				default:
+					return HitTestFilterBehavior.ContinueSkipSelf;
 			}
-
-			var panel = potentialHitTestTarget as ToolPanel;
-
-			if (panel != null)
-			{
-				Panel = panel;
-				return HitTestFilterBehavior.Stop;
-			}
-
-			return HitTestFilterBehavior.ContinueSkipSelf;
 		}
 
-		HitTestResultBehavior HitTestResult(HitTestResult result)
-		{
-			return HitTestResultBehavior.Stop;
-		}
+		HitTestResultBehavior HitTestResult(HitTestResult result) => HitTestResultBehavior.Stop;
 	}
 }

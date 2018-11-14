@@ -17,13 +17,9 @@ namespace DockLib
 		}
 
 		public static void RaiseNotifyUnwrap(ToolSplitPanel element)
-		{
-			element.RaiseEvent(new RoutedEventArgs(NotifyUnwrapEvent, element));
-		}
+			=> element.RaiseEvent(new RoutedEventArgs(NotifyUnwrapEvent, element));
 
 		public static void RaiseDetach(ToolPanel panel)
-		{
-			panel.RaiseEvent(new RoutedEventArgs(DetachEvent, panel));
-		}
+			=> panel.RaiseEvent(new RoutedEventArgs(DetachEvent, panel));
 	}
 }

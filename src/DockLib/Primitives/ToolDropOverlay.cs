@@ -10,13 +10,13 @@ namespace DockLib.Primitives
 	public class ToolDropOverlay : FrameworkElement
 	{
 		public static readonly DependencyProperty PanelRectProperty = DependencyProperty.Register(
-			"PanelRect",
+			nameof(PanelRect),
 			typeof(Rect?),
 			typeof(ToolDropOverlay),
 			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));
 
 		public static readonly DependencyProperty TargetTypeProperty = DependencyProperty.Register(
-			"TargetType",
+			nameof(TargetType),
 			typeof(ToolDropTargetType),
 			typeof(ToolDropOverlay),
 			new FrameworkPropertyMetadata(ToolDropTargetType.None, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsArrange));

@@ -61,23 +61,13 @@ namespace DockLib.Primitives
 					{
 						_state.IsDragging = true;
 
-						var handler = BeginDrag;
-
-						if (handler != null)
-						{
-							handler(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
-						}
+						BeginDrag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
 					}
 				}
 
 				if (_state != null && _state.IsDragging)
 				{
-					var handler = Drag;
-
-					if (handler != null)
-					{
-						handler(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
-					}
+					Drag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
 				}
 			}
 
@@ -120,12 +110,7 @@ namespace DockLib.Primitives
 			{
 				_state = null;
 
-				var handler = EndDrag;
-
-				if (handler != null)
-				{
-					handler(this, new ToolDragEndedEventArgs(device, e.Timestamp, state.MouseDownPoint, cancelled));
-				}
+				EndDrag?.Invoke(this, new ToolDragEndedEventArgs(device, e.Timestamp, state.MouseDownPoint, cancelled));
 			}
 		}
 

@@ -7,7 +7,7 @@ namespace DockLib.Primitives
 	public class ToolDropTargetPoint : Control
 	{
 		public static readonly DependencyProperty TargetTypeProperty = DependencyProperty.Register(
-			"TargetType",
+			nameof(TargetType),
 			typeof(ToolDropTargetType),
 			typeof(ToolDropTargetPoint),
 			new FrameworkPropertyMetadata());

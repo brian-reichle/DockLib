@@ -10,7 +10,7 @@ namespace DockLib
 	public class ToolPanel : ContentControl
 	{
 		public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-			"Header",
+			nameof(Header),
 			typeof(string),
 			typeof(ToolPanel),
 			new FrameworkPropertyMetadata(string.Empty, null, CoerceHeader));

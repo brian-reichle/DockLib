@@ -55,10 +55,7 @@ namespace DockLib
 			private set => SetValue(HasSinglePanelPropertyKey, value);
 		}
 
-		protected override DependencyObject GetUIParentCore()
-		{
-			return Host;
-		}
+		protected override DependencyObject GetUIParentCore() => Host;
 
 		protected override void OnInitialized(EventArgs e)
 		{
