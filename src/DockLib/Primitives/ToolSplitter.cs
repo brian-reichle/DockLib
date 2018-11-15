@@ -48,7 +48,6 @@ namespace DockLib.Primitives
 			if (e.MouseDevice.Capture(this))
 			{
 				_state = new State(e.GetPosition(this));
-				Focus();
 			}
 
 			base.OnMouseLeftButtonDown(e);
@@ -69,13 +68,13 @@ namespace DockLib.Primitives
 					{
 						_state.IsDragging = true;
 
-						BeginDrag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
+						RaiseBeginDrag(e, _state.MouseDownPoint);
 					}
 				}
 
 				if (_state.IsDragging)
 				{
-					Drag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, _state.MouseDownPoint));
+					RaiseDrag(e, _state.MouseDownPoint);
 				}
 			}
 
@@ -84,33 +83,31 @@ namespace DockLib.Primitives
 
 		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
 		{
-			if (_state != null)
+			var state = _state;
+
+			if (state != null && state.IsDragging)
 			{
+				_state = null;
 				e.Handled = true;
-				DoEndDrag(e.MouseDevice, e, false);
+				RaiseEndDrag(e, state.MouseDownPoint, false);
 			}
+
+			ReleaseMouseCapture();
 
 			base.OnMouseLeftButtonUp(e);
 		}
 
-		protected override void OnKeyDown(KeyEventArgs e)
+		protected override void OnGotMouseCapture(MouseEventArgs e)
 		{
-			if (e != null && e.Key == Key.Escape && e.IsDown)
-			{
-				e.Handled = true;
-				DoEndDrag(InputManager.Current.PrimaryMouseDevice, e, true);
-			}
-
-			base.OnKeyDown(e);
+			InputManager.Current.PreProcessInput += OnPreProcessInput;
+			base.OnGotMouseCapture(e);
 		}
 
-		void DoEndDrag(MouseDevice device, InputEventArgs e, bool cancelled)
+		protected override void OnLostMouseCapture(MouseEventArgs e)
 		{
-			if (device.Captured == this)
-			{
-				ReleaseMouseCapture();
-				device.UpdateCursor();
-			}
+			InputManager.Current.PreProcessInput -= OnPreProcessInput;
+			base.OnLostMouseCapture(e);
+			e.MouseDevice.UpdateCursor();
 
 			var state = _state;
 
@@ -118,9 +115,42 @@ namespace DockLib.Primitives
 			{
 				_state = null;
 
-				EndDrag?.Invoke(this, new ToolDragEndedEventArgs(device, e.Timestamp, state.MouseDownPoint, cancelled));
+				RaiseEndDrag(e, state.MouseDownPoint, true);
 			}
 		}
+
+		void OnPreProcessInput(object sender, PreProcessInputEventArgs e)
+		{
+			var args = e.StagingItem.Input;
+
+			if (args.RoutedEvent == PreviewKeyDownEvent)
+			{
+				var keyArgs = (KeyEventArgs)args;
+
+				args.Handled = true;
+				e.Cancel();
+
+				if (keyArgs.Key == Key.Escape)
+				{
+					ReleaseMouseCapture();
+				}
+			}
+			else if (args.RoutedEvent == PreviewKeyUpEvent ||
+				args.RoutedEvent == PreviewTextInputEvent)
+			{
+				args.Handled = true;
+				e.Cancel();
+			}
+		}
+
+		void RaiseBeginDrag(MouseEventArgs e, Point mouseDownPoint)
+			=> BeginDrag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, mouseDownPoint));
+
+		void RaiseDrag(MouseEventArgs e, Point mouseDownPoint)
+			=> Drag?.Invoke(this, new ToolDragEventArgs(e.MouseDevice, e.Timestamp, mouseDownPoint));
+
+		void RaiseEndDrag(MouseEventArgs e, Point mouseDownPoint, bool cancelled)
+			=> EndDrag?.Invoke(this, new ToolDragEndedEventArgs(e.MouseDevice, e.Timestamp, mouseDownPoint, cancelled));
 
 		State _state;
 
