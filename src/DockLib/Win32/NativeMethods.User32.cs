@@ -7,15 +7,13 @@ namespace DockLib
 {
 	static partial class NativeMethods
 	{
-		// BOOL CALLBACK EnumWindowsProc(
-		//     _In_ HWND   hwnd,
-		//     _In_ LPARAM lParam
+		// HWND WindowFromPoint(
+		//     POINT Point
 		// );
 		[SuppressUnmanagedCodeSecurity]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public delegate bool EnumWindowsProc(
-			IntPtr hwnd,
-			IntPtr lParam);
+		[DllImport("user32.dll")]
+		public static extern IntPtr WindowFromPoint(
+			POINT Point);
 
 		// BOOL WINAPI GetCursorPos(
 		//     _Out_ LPPOINT lpPoint
@@ -25,57 +23,6 @@ namespace DockLib
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool GetCursorPos(
 			out POINT lpPoint);
-
-		// BOOL WINAPI EnumWindows(
-		//     _In_ WNDENUMPROC lpEnumFunc,
-		//     _In_ LPARAM      lParam
-		// );
-		[SuppressUnmanagedCodeSecurity]
-		[DllImport("user32.dll")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool EnumWindows(
-			EnumWindowsProc lpEnumFunc,
-			IntPtr lParam);
-
-		// DWORD WINAPI GetWindowThreadProcessId(
-		//     _In_      HWND    hWnd,
-		//     _Out_opt_ LPDWORD lpdwProcessId
-		// );
-		[SuppressUnmanagedCodeSecurity]
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern int GetWindowThreadProcessId(
-			IntPtr hWnd,
-			out int lpdwProcessId);
-
-		// BOOL WINAPI IsWindowVisible(
-		//     _In_ HWND hWnd
-		// );
-		[SuppressUnmanagedCodeSecurity]
-		[DllImport("user32.dll")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool IsWindowVisible(
-			IntPtr hWnd);
-
-		// BOOL WINAPI GetWindowRect(
-		//     _In_  HWND   hWnd,
-		//     _Out_ LPRECT lpRect
-		// );
-		[SuppressUnmanagedCodeSecurity]
-		[DllImport("user32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool GetWindowRect(
-			IntPtr hWnd,
-			out RECT lpRect);
-
-		// int GetWindowRgn(
-		//     _In_  HWND hWnd,
-		//     _In_  HRGN hRgn
-		// );
-		[SuppressUnmanagedCodeSecurity]
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern RegionResult GetWindowRgn(
-			IntPtr hWnd,
-			IntPtr hRgn);
 
 		// HDWP WINAPI BeginDeferWindowPos(
 		//     _In_ int nNumWindows

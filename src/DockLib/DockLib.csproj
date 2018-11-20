@@ -61,8 +61,6 @@
     <Compile Include="Win32\Enum\GetWindowsLongIndex.cs" />
     <Compile Include="Win32\NativeMethods.cs" />
     <Compile Include="Win32\NativeMethods.User32.cs" />
-    <Compile Include="Win32\NativeMethods.Kernel32.cs" />
-    <Compile Include="Win32\NativeMethods.Gdi32.cs" />
     <Compile Include="Win32\Struct\POINT.cs" />
     <Compile Include="Win32\Struct\RECT.cs" />
     <Compile Include="Win32\Enum\RegionResult.cs" />

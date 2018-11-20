@@ -1,7 +1,5 @@
 // Copyright (c) Brian Reichle.  All Rights Reserved.  Licensed under the MIT License.  See License.txt in the project root for license information.
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -16,21 +14,29 @@ namespace DockLib
 			if (windowToIgnore == null) throw new ArgumentNullException(nameof(windowToIgnore));
 
 			var sourceToIgnore = (HwndSource)PresentationSource.FromVisual(windowToIgnore);
+			HwndSourceHook hook = TransparentWndProc;
 
-			var hwnd = FindWindowIgnoringWindow(
-				new NativeMethods.POINT()
-				{
-					x = (int)pt.X,
-					y = (int)pt.Y,
-				},
-				sourceToIgnore.Handle);
-
-			if (hwnd == IntPtr.Zero)
+			sourceToIgnore.AddHook(hook);
+			try
 			{
-				return null;
-			}
+				var resultHWnd = NativeMethods.WindowFromPoint(
+					new NativeMethods.POINT()
+					{
+						x = (int)pt.X,
+						y = (int)pt.Y,
+					});
 
-			return HwndSource.FromHwnd(hwnd)?.RootVisual;
+				if (resultHWnd == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				return HwndSource.FromHwnd(resultHWnd)?.RootVisual;
+			}
+			finally
+			{
+				sourceToIgnore.RemoveHook(hook);
+			}
 		}
 
 		public static Point GetScreenPosition()
@@ -105,132 +111,16 @@ namespace DockLib
 			SafeWin32.SetWindowLong(source, NativeMethods.GetWindowsLongIndex.GWL_EXSTYLE, value);
 		}
 
-		static IntPtr FindWindowIgnoringWindow(NativeMethods.POINT pt, IntPtr hWndToIgnore)
+		static IntPtr TransparentWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
-			var state = new State(
-				hWndToIgnore,
-				pt,
-				NativeMethods.GetCurrentProcessId());
-
-			var stateHandle = new GCHandle();
-
-			RuntimeHelpers.PrepareConstrainedRegions();
-			try
+			switch (msg)
 			{
-				stateHandle = GCHandle.Alloc(state);
-				NativeMethods.EnumWindows(Callback, (IntPtr)stateHandle);
-			}
-			finally
-			{
-				if (stateHandle.IsAllocated)
-				{
-					stateHandle.Free();
-				}
+				case NativeMethods.WM_NCHITTEST:
+					handled = true;
+					return (IntPtr)NativeMethods.HTTRANSPARENT;
 			}
 
-			return state.HWndResult;
-		}
-
-		static bool Callback(IntPtr hWnd, IntPtr lParam)
-		{
-			var dataHandle = (GCHandle)lParam;
-			if (!dataHandle.IsAllocated) return false;
-
-			var state = (State)dataHandle.Target;
-
-			if (hWnd != state.HWndToIgnore && NativeMethods.IsWindowVisible(hWnd) && IsPointInWindow(hWnd, state.PT))
-			{
-				if (GetPID(hWnd) == state.PID)
-				{
-					state.HWndResult = hWnd;
-				}
-
-				return false;
-			}
-
-			return true;
-		}
-
-		static bool IsPointInWindow(IntPtr hWnd, NativeMethods.POINT pt)
-		{
-			if (!NativeMethods.GetWindowRect(hWnd, out var rect))
-			{
-				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
-			}
-
-			if (pt.x < rect.left || pt.x >= rect.right ||
-				pt.y < rect.top || pt.y >= rect.bottom)
-			{
-				return false;
-			}
-
-			var hRgn = IntPtr.Zero;
-
-			RuntimeHelpers.PrepareConstrainedRegions();
-			try
-			{
-				hRgn = NativeMethods.CreateRectRgn(0, 0, 0, 0);
-				var errorCode = NativeMethods.GetWindowRgn(hWnd, hRgn);
-
-				switch (errorCode)
-				{
-					case NativeMethods.RegionResult.NULLREGION: return false;
-					case NativeMethods.RegionResult.SIMPLEREGION: return true;
-
-					case NativeMethods.RegionResult.COMPLEXREGION:
-						return NativeMethods.PtInRegion(hRgn, pt.x, pt.y);
-
-					case NativeMethods.RegionResult.ERROR:
-						var code = Marshal.GetLastWin32Error();
-
-						switch (code)
-						{
-							case NativeMethods.ERROR_SUCCESS:
-								return true;
-
-							case NativeMethods.ERROR_INVALID_HANDLE:
-								// Apparently the window closed.
-								return false;
-						}
-
-						throw new Win32Exception(code);
-
-					default:
-						throw new InvalidOperationException();
-				}
-			}
-			finally
-			{
-				if (hRgn != IntPtr.Zero)
-				{
-					NativeMethods.DeleteObject(hRgn);
-				}
-			}
-		}
-
-		static int GetPID(IntPtr hWnd)
-		{
-			if (NativeMethods.GetWindowThreadProcessId(hWnd, out var processId) == 0)
-			{
-				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
-			}
-
-			return processId;
-		}
-
-		sealed class State
-		{
-			public State(IntPtr hwndToIgnore, NativeMethods.POINT pt, int pid)
-			{
-				HWndToIgnore = hwndToIgnore;
-				PT = pt;
-				PID = pid;
-			}
-
-			public IntPtr HWndToIgnore { get; }
-			public IntPtr HWndResult { get; set; }
-			public NativeMethods.POINT PT { get; }
-			public int PID { get; }
+			return IntPtr.Zero;
 		}
 	}
 }
